@@ -10,7 +10,6 @@
 // 2. Validate each input on the fly using onchange event
 // 3. Define re-usable validators: length, format,
 
-
 function lengthValidator(name, Node, Errors, length1, length2) {
     if (Node.value.length < length1) {
         let li = document.createElement('li');
@@ -35,10 +34,14 @@ function formatValidator(name, Node, Errors, regex) {
     return Errors;
 }
 
-function validateMe(event) {
-    event.preventDefault();
-
-    const emailNode = event.target.elements['email'];
+function validateEmail(event) {
+    let emailNode;
+    if (event.target.elements === undefined){
+        emailNode = event.target;
+    }
+    else{
+        emailNode = event.target.elements['email'];
+    }
     const emailErrorNode = emailNode.parentNode.querySelector('p.help-block');
     emailErrorNode.innerHTML = '';
 
@@ -52,8 +55,16 @@ function validateMe(event) {
     if (emailErrors.childElementCount > 0) {
         emailErrorNode.appendChild(emailErrors)
     }
+}
 
-    const nameNode = event.target.elements['name'];
+function validateName(event) {
+    let nameNode;
+    if (event.target.elements === undefined){
+        nameNode = event.target;
+    }
+    else{
+        nameNode = event.target.elements['name'];
+    }
     const nameErrorNode = nameNode.parentNode.querySelector('p.help-block');
     nameErrorNode.innerHTML = '';
 
@@ -67,8 +78,16 @@ function validateMe(event) {
     if (nameErrors.childElementCount > 0) {
         nameErrorNode.appendChild(nameErrors)
     }
+}
 
-    const phoneNode = event.target.elements['phone'];
+function validatePhone(event) {
+    let phoneNode;
+    if (event.target.elements === undefined){
+        phoneNode = event.target;
+    }
+    else{
+        phoneNode = event.target.elements['phone'];
+    }
     const phoneErrorNode = phoneNode.parentNode.querySelector('p.help-block');
     phoneErrorNode.innerHTML = '';
 
@@ -81,8 +100,16 @@ function validateMe(event) {
     if (phoneErrors.childElementCount > 0) {
         phoneErrorNode.appendChild(phoneErrors)
     }
+}
 
-    const messageNode = event.target.elements['message'];
+function validateMessage(event) {
+    let messageNode;
+    if (event.target.elements === undefined){
+        messageNode = event.target;
+    }
+    else{
+        messageNode = event.target.elements['message'];
+    }
     const messageErrorNode = messageNode.parentNode.querySelector('p.help-block');
     messageErrorNode.innerHTML = '';
 
@@ -97,6 +124,15 @@ function validateMe(event) {
     if (messageErrors.childElementCount > 0) {
         messageErrorNode.appendChild(messageErrors)
     }
+}
+
+function validateMe(event) {
+    event.preventDefault();
+
+    validateEmail(event);
+    validateName(event);
+    validatePhone(event);
+    validateMessage(event);
 
     return false;
 }
