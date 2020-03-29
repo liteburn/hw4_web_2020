@@ -10,7 +10,6 @@
 // 2. Validate each input on the fly using onchange event
 // 3. Define re-usable validators: length, format,
 
-
 function lengthValidator(name, Node, Errors, length1, length2) {
     if (Node.value.length < length1) {
         let li = document.createElement('li');
@@ -34,6 +33,7 @@ function formatValidator(name, Node, Errors, regex) {
     }
     return Errors;
 }
+
 
 function validateMe(event) {
     event.preventDefault();
