@@ -8,32 +8,95 @@
 //    message is 10 or more characters.
 //    message must not iclude bad language: ugly, dumm, stupid, pig, ignorant
 // 2. Validate each input on the fly using onchange event
-// 3. Define re-usable validators: length, format,  
+// 3. Define re-usable validators: length, format,
+
+
+function lengthValidator(name, Node, Errors, length1, length2) {
+    if (Node.value.length < length1) {
+        let li = document.createElement('li');
+        li.innerText = name + ' is too short';
+        Errors.appendChild(li)
+    }
+    if (length2 !== -1) {
+        if (Node.value.length > length2) {
+            let li = document.createElement('li');
+            li.innerText = 'Email is too long';
+            Errors.appendChild(li)
+        }
+    }
+}
+
+function formatValidator(name, Node, Errors, regex) {
+    if (!Node.value.match(regex)) {
+        let li = document.createElement('li');
+        li.innerText = name + " format is incorrect";
+        Errors.appendChild(li)
+    }
+    return Errors;
+}
+
 function validateMe(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  const emailNode = event.target.elements['email'];
-  const emailErrorNode = emailNode.parentNode.querySelector('p.help-block')
-  emailErrorNode.innerHTML = '';
+    const emailNode = event.target.elements['email'];
+    const emailErrorNode = emailNode.parentNode.querySelector('p.help-block');
+    emailErrorNode.innerHTML = '';
 
-  let emailErrors = document.createElement('ul');
-  emailErrors.setAttribute("role", "alert");
+    let emailErrors = document.createElement('ul');
+    emailErrors.setAttribute("role", "alert");
 
-  if (emailNode.value.length < 5 ) {
-    let li = document.createElement('li');
-    li.innerText = 'Email is too short';
-    emailErrors.appendChild(li)
-  }
+    lengthValidator("Email", emailNode, emailErrors, 5, 50);
 
-  if (!emailNode.value.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-    let li = document.createElement('li');
-    li.innerText = 'Email format is incorrect';
-    emailErrors.appendChild(li)
-  }
+    formatValidator("Email", emailNode, emailErrors, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
-  if (emailErrors.childElementCount > 0) {
-    emailErrorNode.appendChild(emailErrors)
-  }
+    if (emailErrors.childElementCount > 0) {
+        emailErrorNode.appendChild(emailErrors)
+    }
 
-  return false;
+    const nameNode = event.target.elements['name'];
+    const nameErrorNode = nameNode.parentNode.querySelector('p.help-block');
+    nameErrorNode.innerHTML = '';
+
+    let nameErrors = document.createElement('ul');
+    nameErrors.setAttribute("role", "alert");
+
+    lengthValidator("Name", nameNode, nameErrors, 1, -1);
+
+    formatValidator("Name", nameNode, nameErrors, /(^[A-Z][a-z]*$)|(^[A-Z][a-z]*[ ][A-Z][a-z]*[ ][A-Z][a-z]*$)/);
+
+    if (nameErrors.childElementCount > 0) {
+        nameErrorNode.appendChild(nameErrors)
+    }
+
+    const phoneNode = event.target.elements['phone'];
+    const phoneErrorNode = phoneNode.parentNode.querySelector('p.help-block');
+    phoneErrorNode.innerHTML = '';
+
+    let phoneErrors = document.createElement('ul');
+    phoneErrors.setAttribute("role", "alert");
+
+    //    phone format is correct. Valid formats: "+38032 000 000 00", "+380(32) 000 000 00", "+380(32)-000-000-00", "0380(32) 000 000 00", + any combitaion
+    formatValidator("Phone", phoneNode, phoneErrors, /^[+0]\d{1,3}[(]?\d{2}[)]?[ -]?\d{3}[ -]?\d{2}[ -]?\d{2}$/);
+
+    if (phoneErrors.childElementCount > 0) {
+        phoneErrorNode.appendChild(phoneErrors)
+    }
+
+    const messageNode = event.target.elements['message'];
+    const messageErrorNode = messageNode.parentNode.querySelector('p.help-block');
+    messageErrorNode.innerHTML = '';
+
+    let messageErrors = document.createElement('ul');
+    messageErrors.setAttribute("role", "alert");
+
+    lengthValidator("Message", messageNode, messageErrors, 10, -1);
+
+
+    formatValidator("Message",messageNode, messageErrors,/^((?!((ugly)|(dumm)|(stupid)|(pig)|(ignorant))).)*$/);
+
+    if (messageErrors.childElementCount > 0) {
+        messageErrorNode.appendChild(messageErrors)
+    }
+
+    return false;
 }
