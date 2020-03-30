@@ -14,13 +14,13 @@ function lengthValidator(name, Node, Errors, length1, length2) {
     if (Node.value.length < length1) {
         let li = document.createElement('li');
         li.innerText = name + ' is too short';
-        Errors.appendChild(li)
+        Errors.appendChild(li);
     }
     if (length2 !== -1) {
         if (Node.value.length > length2) {
             let li = document.createElement('li');
             li.innerText = 'Email is too long';
-            Errors.appendChild(li)
+            Errors.appendChild(li);
         }
     }
 }
@@ -29,17 +29,16 @@ function formatValidator(name, Node, Errors, regex) {
     if (!Node.value.match(regex)) {
         let li = document.createElement('li');
         li.innerText = name + " format is incorrect";
-        Errors.appendChild(li)
+        Errors.appendChild(li);
     }
     return Errors;
 }
 
 function validateEmail(event) {
     let emailNode;
-    if (event.target.elements === undefined){
+    if (event.target.elements === undefined) {
         emailNode = event.target;
-    }
-    else{
+    } else {
         emailNode = event.target.elements['email'];
     }
     const emailErrorNode = emailNode.parentNode.querySelector('p.help-block');
@@ -53,16 +52,17 @@ function validateEmail(event) {
     formatValidator("Email", emailNode, emailErrors, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
     if (emailErrors.childElementCount > 0) {
-        emailErrorNode.appendChild(emailErrors)
+        emailErrorNode.appendChild(emailErrors);
+        return false;
     }
+    return true;
 }
 
 function validateName(event) {
     let nameNode;
-    if (event.target.elements === undefined){
+    if (event.target.elements === undefined) {
         nameNode = event.target;
-    }
-    else{
+    } else {
         nameNode = event.target.elements['name'];
     }
     const nameErrorNode = nameNode.parentNode.querySelector('p.help-block');
@@ -76,16 +76,17 @@ function validateName(event) {
     formatValidator("Name", nameNode, nameErrors, /(^[A-Z][a-z]*$)|(^[A-Z][a-z]*[ ][A-Z][a-z]*[ ][A-Z][a-z]*$)/);
 
     if (nameErrors.childElementCount > 0) {
-        nameErrorNode.appendChild(nameErrors)
+        nameErrorNode.appendChild(nameErrors);
+        return false;
     }
+    return true;
 }
 
 function validatePhone(event) {
     let phoneNode;
-    if (event.target.elements === undefined){
+    if (event.target.elements === undefined) {
         phoneNode = event.target;
-    }
-    else{
+    } else {
         phoneNode = event.target.elements['phone'];
     }
     const phoneErrorNode = phoneNode.parentNode.querySelector('p.help-block');
@@ -98,16 +99,17 @@ function validatePhone(event) {
     formatValidator("Phone", phoneNode, phoneErrors, /^[+0]\d{1,3}[(]?\d{2}[)]?[ -]?\d{3}[ -]?\d{2}[ -]?\d{2}$/);
 
     if (phoneErrors.childElementCount > 0) {
-        phoneErrorNode.appendChild(phoneErrors)
+        phoneErrorNode.appendChild(phoneErrors);
+        return false;
     }
+    return true;
 }
 
 function validateMessage(event) {
     let messageNode;
-    if (event.target.elements === undefined){
+    if (event.target.elements === undefined) {
         messageNode = event.target;
-    }
-    else{
+    } else {
         messageNode = event.target.elements['message'];
     }
     const messageErrorNode = messageNode.parentNode.querySelector('p.help-block');
@@ -119,20 +121,20 @@ function validateMessage(event) {
     lengthValidator("Message", messageNode, messageErrors, 10, -1);
 
 
-    formatValidator("Message",messageNode, messageErrors,/^((?!((ugly)|(dumm)|(stupid)|(pig)|(ignorant))).)*$/);
+    formatValidator("Message", messageNode, messageErrors, /^((?!((ugly)|(dumm)|(stupid)|(pig)|(ignorant))).)*$/);
 
     if (messageErrors.childElementCount > 0) {
-        messageErrorNode.appendChild(messageErrors)
+        messageErrorNode.appendChild(messageErrors);
+        return false;
     }
+    return true;
 }
 
 function validateMe(event) {
     event.preventDefault();
-
-    validateEmail(event);
-    validateName(event);
-    validatePhone(event);
-    validateMessage(event);
-
-    return false;
+    checker = validateEmail(event) && validateName(event) && validatePhone(event) && validateMessage(event);
+    if (checker) {
+        event.target.submit();
+    }
+    return checker;
 }
